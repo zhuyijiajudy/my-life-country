@@ -224,13 +224,13 @@
       <p class="subtitle">回答几个问题，找到你灵魂真正的归属地</p>
       <div class="divider"></div>
       <div class="form-group">
-        <label>测试密钥 <span class="required">*</span></label>
+        <label>输入你的专属口令 <span class="required">*</span></label>
         <input type="text" id="accessKey" placeholder="例：A7K2-M9X4-Q3W8-P1N6" autocomplete="off" style="text-transform:uppercase; letter-spacing:2px; font-family:monospace,sans-serif;">
-        <div class="error-msg" id="keyError">密钥无效，请检查后重新输入</div>
+        <div class="error-msg" id="keyError">口令无效，请检查后重新输入</div>
       </div>
-      <button class="btn btn-primary" onclick="validateKey()">🔓 开始探索</button>
+      <button class="btn btn-primary" onclick="validateKey()">✨ 开启你的探索之旅</button>
       <div class="key-info">
-        💡 本测试为付费内容，每个密钥仅限使用一次。如需获取密钥，请联系我们的官方渠道购买。
+        🔮 每位探索者都有一个专属口令，输入口令即可解锁你的灵魂归属地。
       </div>
     </div>
   </div>
@@ -333,7 +333,8 @@
 // =============================================
 // CONFIGURATION: Valid access keys
 // =============================================
-// 预生成的一次性密钥（共30个，格式：XXXX-XXXX-XXXX-XXXX）
+// 一次性密钥（共40个，格式：XXXX-XXXX-XXXX-XXXX）
+// 自动化任务「每日生成密钥」会在每天早上9点自动追加10个新密钥
 const VALID_KEYS = [
   'A7K2-M9X4-Q3W8-P1N6',
   'B4R8-T6J1-V2F5-H9L3',
@@ -364,7 +365,18 @@ const VALID_KEYS = [
   '4X7N-W2D3-F8K6-H5B9',
   '5J1R-T6V8-G3P4-N7X2',
   '6H3W-K9F5-D4B1-V8T7',
-  '7G9D-N3X6-R1W4-J2P8'
+  '7G9D-N3X6-R1W4-J2P8',
+  // ---- 2026-03-13 新增 ----
+  'R8K3-W5N7-D2F9-T4X6',
+  'P3V8-J6H2-N9K5-G7R4',
+  'T5D9-X2B6-F8W3-L7J5',
+  'H4N7-K9R2-V6T8-B3P5',
+  'W6F3-D8J5-X4G9-N2R7',
+  'J9T4-B7K6-R2H8-W5D3',
+  'G2X8-N5F7-T3V9-K6H4',
+  'D7R5-W3P9-J8N2-F4B6',
+  'X4H6-T9K3-B5W7-G2N8',
+  'N8G4-F6D2-K7X5-R3T9'
 ];
 
 // 获取已使用的密钥列表（存储在 localStorage 中）
@@ -384,7 +396,7 @@ function markKeyAsUsed(key) {
 }
 
 // =============================================
-// DATA: Quiz Questions (8 questions, 6 dimensions)
+// DATA: Quiz Questions (10 questions, 6 dimensions)
 // Dimensions:
 //   adventure  — 冒险 vs 安稳
 //   social     — 社交 vs 独处
@@ -399,21 +411,21 @@ const questions = [
     question: "周末早上醒来，你最想做的第一件事是？",
     hint: "跟随你的直觉选择",
     options: [
-      { icon:"🎒", text:"收拾背包去一个从没去过的地方", scores:{ adventure:3, nature:1 } },
-      { icon:"☕", text:"泡一杯咖啡，窝在沙发上看书", scores:{ pace:-2, social:-1 } },
-      { icon:"👥", text:"约上三五好友出去吃早午餐", scores:{ social:3, pace:1 } },
-      { icon:"🎨", text:"打开画板或乐器，沉浸在创作中", scores:{ aesthetic:3, social:-1 } }
+      { icon:"🎒", text:"背上包去没去过的地方", scores:{ adventure:3, nature:1 } },
+      { icon:"☕", text:"泡杯咖啡窝着看书", scores:{ pace:-2, social:-1 } },
+      { icon:"👥", text:"约好友出去吃早午餐", scores:{ social:3, pace:1 } },
+      { icon:"🎨", text:"沉浸在画画或音乐中", scores:{ aesthetic:3, social:-1 } }
     ]
   },
   {
     id: 2,
-    question: "如果给你一笔足够的旅行基金，你会选择？",
+    question: "如果给你一笔旅行基金，你会选择？",
     hint: "钱不是问题，跟随你的心",
     options: [
-      { icon:"🏔️", text:"穿越亚马逊丛林或攀登喜马拉雅", scores:{ adventure:3, nature:3 } },
-      { icon:"🏛️", text:"游历欧洲古城，参观博物馆和教堂", scores:{ aesthetic:2, tradition:2 } },
-      { icon:"🌆", text:"在纽约或东京体验最前沿的都市生活", scores:{ pace:3, nature:-2 } },
-      { icon:"🏖️", text:"在海边小镇租一间房子住上一个月", scores:{ pace:-3, nature:2 } }
+      { icon:"🏔️", text:"穿越丛林或攀登雪山", scores:{ adventure:3, nature:3 } },
+      { icon:"🏛️", text:"游历古城和博物馆", scores:{ aesthetic:2, tradition:2 } },
+      { icon:"🌆", text:"体验最前沿的都市生活", scores:{ pace:3, nature:-2 } },
+      { icon:"🏖️", text:"海边小镇住上一个月", scores:{ pace:-3, nature:2 } }
     ]
   },
   {
@@ -421,10 +433,10 @@ const questions = [
     question: "在团队项目中，你通常扮演什么角色？",
     hint: "想想你在学校或工作中的表现",
     options: [
-      { icon:"👑", text:"领导者——我喜欢制定方向和做决策", scores:{ social:2, pace:2 } },
-      { icon:"🧩", text:"协调者——我擅长让大家合作更顺畅", scores:{ social:2, tradition:1 } },
-      { icon:"💡", text:"创意者——我负责提出新颖的想法", scores:{ aesthetic:2, adventure:1 } },
-      { icon:"🔧", text:"执行者——我喜欢专注把事情做到完美", scores:{ tradition:2, pace:-1 } }
+      { icon:"👑", text:"领导者，制定方向做决策", scores:{ social:2, pace:2 } },
+      { icon:"🧩", text:"协调者，让大家配合顺畅", scores:{ social:2, tradition:1 } },
+      { icon:"💡", text:"创意者，提出新颖的想法", scores:{ aesthetic:2, adventure:1 } },
+      { icon:"🔧", text:"执行者，专注把事做到极致", scores:{ tradition:2, pace:-1 } }
     ]
   },
   {
@@ -432,8 +444,8 @@ const questions = [
     question: "你理想中的居住环境是？",
     hint: "想象你每天生活的地方",
     options: [
-      { icon:"🌳", text:"被森林和山脉环绕的木屋", scores:{ nature:3, social:-2, pace:-2 } },
-      { icon:"🏙️", text:"繁华都市中心的高层公寓", scores:{ nature:-3, pace:3, social:1 } },
+      { icon:"🌳", text:"森林山脉环绕的木屋", scores:{ nature:3, social:-2, pace:-2 } },
+      { icon:"🏙️", text:"繁华都市的高层公寓", scores:{ nature:-3, pace:3, social:1 } },
       { icon:"🏘️", text:"安静友好的郊区社区", scores:{ tradition:2, social:1, pace:-1 } },
       { icon:"🎭", text:"充满艺术气息的老城区", scores:{ aesthetic:3, tradition:1 } }
     ]
@@ -443,43 +455,65 @@ const questions = [
     question: "面对人生中的重大决定，你倾向于？",
     hint: "比如换工作、搬家这样的大事",
     options: [
-      { icon:"🎲", text:"大胆尝试！人生就是要冒险", scores:{ adventure:3, tradition:-2 } },
-      { icon:"📊", text:"列出利弊，理性分析后再做决定", scores:{ tradition:1, pace:-1 } },
-      { icon:"💬", text:"和亲朋好友讨论，听取他们的意见", scores:{ social:2, tradition:1 } },
-      { icon:"🧘", text:"跟随内心的感觉，相信直觉", scores:{ aesthetic:1, adventure:1, tradition:-1 } }
+      { icon:"🎲", text:"大胆尝试，人生就要冒险", scores:{ adventure:3, tradition:-2 } },
+      { icon:"📊", text:"列出利弊，理性分析再决定", scores:{ tradition:1, pace:-1 } },
+      { icon:"💬", text:"和亲友讨论，听取意见", scores:{ social:2, tradition:1 } },
+      { icon:"🧘", text:"跟随内心感觉，相信直觉", scores:{ aesthetic:1, adventure:1, tradition:-1 } }
     ]
   },
   {
     id: 6,
-    question: "工作和生活的平衡中，你更看重什么？",
+    question: "工作和生活的平衡中，你更看重？",
     hint: "没有对错，选择最真实的你",
     options: [
-      { icon:"🚀", text:"事业成就感——我愿意为梦想拼尽全力", scores:{ pace:3, adventure:1 } },
-      { icon:"👨‍👩‍👧", text:"家庭和情感关系——这才是人生的根基", scores:{ tradition:2, social:1, pace:-1 } },
-      { icon:"🌈", text:"个人自由——我不想被任何东西束缚", scores:{ tradition:-3, adventure:2 } },
-      { icon:"🧠", text:"自我成长——不断学习才是人生意义", scores:{ aesthetic:1, adventure:1 } }
+      { icon:"🚀", text:"事业成就，愿意全力拼搏", scores:{ pace:3, adventure:1 } },
+      { icon:"👨‍👩‍👧", text:"家庭情感，这是人生根基", scores:{ tradition:2, social:1, pace:-1 } },
+      { icon:"🌈", text:"个人自由，不想被束缚", scores:{ tradition:-3, adventure:2 } },
+      { icon:"🧠", text:"自我成长，学习就是意义", scores:{ aesthetic:1, adventure:1 } }
     ]
   },
   {
     id: 7,
     question: "你与陌生人的相处方式是？",
-    hint: "想想你在社交场合中的自然反应",
+    hint: "想想你在社交场合的自然反应",
     options: [
-      { icon:"🤝", text:"主动上前打招呼，聊天很自然", scores:{ social:3, adventure:1 } },
-      { icon:"😊", text:"如果对方先说话，我会很友好地回应", scores:{ social:1 } },
-      { icon:"📱", text:"更喜欢线上交流，面对面有点不自在", scores:{ social:-2, pace:1 } },
+      { icon:"🤝", text:"主动打招呼，聊天很自然", scores:{ social:3, adventure:1 } },
+      { icon:"😊", text:"对方先开口，我会友好回应", scores:{ social:1 } },
+      { icon:"📱", text:"更喜欢线上交流", scores:{ social:-2, pace:1 } },
       { icon:"🎧", text:"享受独处，不太需要社交", scores:{ social:-3, nature:1 } }
     ]
   },
   {
     id: 8,
+    question: "你更向往哪种饮食文化？",
+    hint: "食物往往反映一个人的性格",
+    options: [
+      { icon:"🍣", text:"精致讲究，注重摆盘仪式", scores:{ aesthetic:3, tradition:2 } },
+      { icon:"🥘", text:"热闹丰盛，大家围坐分享", scores:{ social:2, tradition:1 } },
+      { icon:"🌮", text:"街头小吃，随性又有趣", scores:{ adventure:2, tradition:-1 } },
+      { icon:"🥗", text:"健康简约，崇尚天然食材", scores:{ nature:2, pace:-1 } }
+    ]
+  },
+  {
+    id: 9,
+    question: "你更喜欢什么样的天气和气候？",
+    hint: "气候偏好暗藏你的性格密码",
+    options: [
+      { icon:"☀️", text:"终年温暖，阳光充沛", scores:{ social:1, adventure:1, nature:1 } },
+      { icon:"🍂", text:"四季分明，感受每季变化", scores:{ aesthetic:2, tradition:1 } },
+      { icon:"❄️", text:"凛冽冬雪，安静而纯粹", scores:{ social:-2, nature:2, pace:-1 } },
+      { icon:"🌊", text:"温润海风，舒适不极端", scores:{ pace:-1, nature:1 } }
+    ]
+  },
+  {
+    id: 10,
     question: "如果明天世界末日，你今晚最想做什么？",
     hint: "最后一道题，最真实的你",
     options: [
-      { icon:"🎉", text:"开一场盛大的派对，和所有人狂欢", scores:{ social:3, pace:2, tradition:-1 } },
-      { icon:"✈️", text:"立刻飞去一个一直想去但没去的地方", scores:{ adventure:3, nature:1 } },
-      { icon:"📝", text:"写一封长长的信给最重要的人", scores:{ aesthetic:1, tradition:2, social:1 } },
-      { icon:"🌅", text:"找一个安静的地方看最后一次日落", scores:{ nature:3, pace:-2, aesthetic:1 } }
+      { icon:"🎉", text:"办一场派对，和所有人狂欢", scores:{ social:3, pace:2, tradition:-1 } },
+      { icon:"✈️", text:"立刻出发去向往已久的远方", scores:{ adventure:3, nature:1 } },
+      { icon:"📝", text:"写封信给最重要的人", scores:{ aesthetic:1, tradition:2, social:1 } },
+      { icon:"🌅", text:"找个安静的地方看最后的日落", scores:{ nature:3, pace:-2, aesthetic:1 } }
     ]
   }
 ];
@@ -680,14 +714,14 @@ function validateKey() {
   const usedKeys = getUsedKeys();
 
   if (!VALID_KEYS.includes(key)) {
-    err.textContent = '密钥无效，请检查后重新输入';
+    err.textContent = '口令无效，请检查后重新输入';
     err.classList.add('show');
     document.getElementById('accessKey').focus();
     return;
   }
 
   if (usedKeys.includes(key)) {
-    err.textContent = '该密钥已被使用，请输入新的密钥';
+    err.textContent = '该口令已被使用过啦，请输入新的口令';
     err.classList.add('show');
     document.getElementById('accessKey').focus();
     return;
